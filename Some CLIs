@@ -1,0 +1,17 @@
+//using in Ubuntu
+man apt
+clear
+sudo nano /etc/apt/sources.list
+sudo apt/apt-get install <>
+sudo apt/apt-get update
+sudo apt/apt-get upgrade
+
+//using in VsCode
+clear
+cd + filefolder_name
+ls / la / ls -a / la -a
+rm + file_name
+mkdir + filefolder_name
+./
+/
+. to hide the file/folder
