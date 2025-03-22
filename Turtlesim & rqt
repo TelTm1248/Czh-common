@@ -1,0 +1,6 @@
+ros2 run turtlesim turtlesim_node
+new terminal:
+ros2 run turtlesim trutlesim_teleop_key
+
+rqt
+rqt_graph
