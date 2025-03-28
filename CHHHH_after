@@ -1,0 +1,95 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+#include <atomic>
+using namespace std;
+
+class CH4
+{
+public:
+    mutex mtx;
+    condition_variable cv;
+    int num_C = 0, num_H = 0;
+    int process_H = 0;
+    bool process_C = false;
+    atomic<int> molecules{0};
+
+    void hydrogen()
+    {
+        unique_lock<mutex> lock(mtx);
+        num_H++;
+        if (num_H >= 4 && num_C >= 1)
+        {
+            process_H = 4;
+            process_C = true;
+            cv.notify_all();
+        }
+        cv.wait(lock, [this]
+                { return process_H > 0; });
+        cout << "H";
+        process_H--;
+        num_H--;
+        if (process_H == 0 && process_C)
+        {
+            num_C--;
+            process_C = false;
+            molecules++;
+        }
+    }
+
+    void carbon()
+    {
+        unique_lock<mutex> lock(mtx);
+        num_C++;
+        if (num_H >= 4)
+        {
+            process_H = 4;
+            process_C = true;
+            cv.notify_all();
+        }
+        cv.wait(lock, [this]
+                { return process_C; });
+        cout << "C";
+        cv.wait(lock, [this]
+                { return process_H == 0; });
+        process_C = false;
+    }
+};
+
+void thread_H(CH4 &ch4, int n)
+{
+    ch4.hydrogen();
+}
+
+void thread_C(CH4 &ch4, int n)
+{
+    ch4.carbon();
+}
+
+int main(void)
+{
+    string str;
+    cin >> str;
+    CH4 ch4;
+    vector<thread> threads;
+
+    for (int i = 0; i < str.size(); i++)
+    {
+        if (str[i] == 'C')
+        {
+            threads.emplace_back(&CH4::carbon, &ch4);
+        }
+        else if (str[i] == 'H')
+        {
+            threads.emplace_back(&CH4::hydrogen, &ch4);
+        }
+    }
+
+    for (auto &thread : threads)
+    {
+        thread.join();
+    }
+}
