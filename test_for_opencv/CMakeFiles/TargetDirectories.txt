@@ -1,0 +1,3 @@
+/home/teltm_1248/ws_rm/test_for_opencv/CMakeFiles/main.dir
+/home/teltm_1248/ws_rm/test_for_opencv/CMakeFiles/edit_cache.dir
+/home/teltm_1248/ws_rm/test_for_opencv/CMakeFiles/rebuild_cache.dir

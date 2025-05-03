@@ -1,0 +1,36 @@
+#include <iostream>
+#include <opencv2/opencv.hpp>
+
+using namespace std;
+using namespace cv;
+
+int main(void) {
+    Mat img = imread("teltm_ori", IMREAD_COLOR);
+
+    namedWindow("Original Image", WINDOW_AUTOSIZE);
+    imshow("Original Image", img);
+
+    Mat gray_img;
+    cvtColor(img, gray_img, COLOR_BGR2GRAY);
+    namedWindow("Grayscale Image", WINDOW_AUTOSIZE);
+    imshow("Grayscale Image", gray_img);
+
+    Mat binary_img;
+    threshold(gray_img, binary_img, 128, 255, THRESH_BINARY);
+    namedWindow("Binary Image", WINDOW_AUTOSIZE);
+    imshow("Binary Image", binary_img);
+
+    Mat blurred_img;
+    GaussianBlur(img, blurred_img, Size(5, 5), 0);
+    namedWindow("Gaussian Blurred", WINDOW_AUTOSIZE);
+    imshow("Gaussian Blurred", blurred_img);
+
+    Mat dilated_img;
+    Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
+    dilate(binary_img, dilated_img, kernel, Point(-1, -1), 1);
+    namedWindow("Dilated Image", WINDOW_AUTOSIZE);
+    imshow("Dilated Image", dilated_img);
+
+    waitKey(0);
+    destroyAllWindows();
+}
